@@ -1,6 +1,7 @@
-import { app, BrowserWindow } from 'electron';
-import { isDev } from './util.js';
+import { app, BrowserWindow, ipcMain } from 'electron';
+import { ipcMainHandle, isDev } from './util.js';
 import { getPreloadPath, getUIPath } from './pathResolver.js';
+import { save } from './save.js';
 
 // Remove menu from application
 // Menu.setApplicationMenu(null);
@@ -17,6 +18,8 @@ app.on('ready', () => {
   } else {
     mainWindow.loadFile(getUIPath());
   }
+
+  ipcMainHandle('save', () => save(mainWindow));
 
   handleCloseEvents(mainWindow);
 });

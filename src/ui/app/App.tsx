@@ -1,30 +1,41 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import "./App.css";
+import './App.css';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Canvas from './Canvas';
+import { useState } from 'react';
+import ListGroup from 'react-bootstrap/ListGroup';
+import ListGroupItem from 'react-bootstrap/esm/ListGroupItem';
 
 function App() {
-  const [count, setCount] = useState(0);
+
+  const [files, setFiles] = useState<string[]>([]);
+
+  const onSave: React.MouseEventHandler = async (): Promise<void> => {
+    const val = await window.electron.save()
+    setFiles(val);
+  }
+
+  // const onSave: OnConnect = useCallback(
+  //       (connection) => setEdges((eds) => addEdge(connection, eds)),
+  //       [setEdges],
+  //   );
 
   return (
-    <>
-      <div>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Container fluid className='vh-100'>
+      <Row className='h-100'>
+        <Col sm="auto" style={{ background: 'red' }}>
+          <Button variant="success" onClick={onSave}>Save</Button>
+          <ListGroup>
+            {files.map((item, index) => <ListGroupItem key={index}>{item}</ListGroupItem>)}
+          </ListGroup>
+        </Col>
+        <Col>
+          <Canvas />
+        </Col>
+      </Row>
+    </Container >
   );
 }
 
